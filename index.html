@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="styles/style.css">
+
+  <title>Document</title>
+
+  <script type="module" defer src="scripts/dom-manager.js"></script>
+</head>
+
+<body>
+  <div class="menu">
+    <h1 class="menuTitle">Game Ended</h1>
+    <h2 class="menuMessage">This is the message</h2>
+    <div class="buttonContainer">
+      <button title="Neues Spiel" class="buttonNewGame">
+        <div class="buttonContent">
+          <p>Neues Spiel</p>
+        </div>
+      </button>
+    </div>
+  </div>
+  <div class="playerContainer reduced">
+    <div class="diceContainerAligner">
+      <div class="diceContainer">
+        <div class="dashedBorderContainer">
+          <div class="buttonContainer">
+            <button disabled title="Würfeln" class="buttonRollDice">
+              <div class="buttonContent">
+                <img id="diceIcon" src="icons/six.svg" alt="">
+              </div>
+            </button>
+            <div class="rollCounter">
+              <div class="pip"></div>
+            </div>
+            <button disabled title="Halten" class="buttonHoldStake">
+              <div class="buttonContent">
+                <p>Halten</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="playerAddContainer">
+    <div class="dashedBorderContainer">
+      <div class="buttonContainer">
+        <button title="Neuen lokalen Spieler hinzufügen" class="playerAddButton buttonAddPlayer">
+          <div class="buttonContent">
+            <img class="playerAddImage" src="icons/player-plus.svg" alt="">
+            <p>Lokaler Spieler</p>
+          </div>
+        </button>
+        <button title="Neuen Bot hinzufügen" class="playerAddButton buttonAddBot">
+          <div class="buttonContent">
+            <img class="playerAddImage" src="icons/bot.svg" alt="">
+            <p>Bot</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

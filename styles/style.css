@@ -1,0 +1,326 @@
+@font-face {
+  font-family: "Audiowide";
+  src: url("../media/Audiowide-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Audiowide", cursive;
+}
+
+html {
+  filter: invert(10%);
+}
+
+body {
+  display: flex;
+  padding: 20px;
+  height: 100vh;
+  background-color: black;
+}
+
+.menu {
+  z-index: 100;
+  position: fixed;
+  inset: 0;
+  display: none;
+  padding: 200px;
+  gap: 30px;
+  opacity: 0;
+  background-color: black;
+  color: white;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes menu-fade {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+  1% {
+    display: flex;
+  }
+  100% {
+    opacity: 1;
+    display: flex;
+  }
+}
+.menu.visible {
+  opacity: 1;
+  display: flex;
+  animation: menu-fade ease-out 1s forwards;
+}
+
+h1 {
+  font-size: 5rem;
+  font-weight: lighter;
+}
+
+h2 {
+  font-size: 3rem;
+  font-weight: lighter;
+}
+
+.digit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  width: 65px;
+  overflow: hidden;
+}
+
+.playerContainer {
+  display: grid;
+  grid-template-columns: 1fr 0 1fr;
+  grid-template-rows: 1fr 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 600px;
+  min-height: 330px;
+  margin: 10px;
+  background-color: white;
+  color: black;
+  font-size: 4rem;
+  border-radius: 45px;
+  border: dashed 3px white;
+  transition-property: filter;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-out;
+}
+.player .name {
+  margin-inline: 20px;
+  font-size: 4rem;
+  width: 100%;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+  margin-bottom: 20px;
+}
+.player .name:focus {
+  outline: none;
+}
+.player .digit:first-child {
+  width: 0;
+  transition: width 0.5s ease-out;
+}
+.player .score {
+  height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+  background-color: transparent;
+  border-bottom: 2px solid transparent;
+  transition: height 0.5s ease-out, border-bottom 0.5s ease-out;
+}
+.player .stake {
+  height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+  transition: height 0.5s ease-out;
+}
+
+.player.active {
+  filter: invert(100%);
+  border-color: black;
+  animation: player-fade-to-active 0.5s ease-out 1 normal forwards;
+}
+.player.active .digit:first-child {
+  width: 65px;
+}
+.player.active .score {
+  border-bottom: solid black 2px;
+  height: 80px;
+}
+.player.active .stake {
+  height: 80px;
+}
+
+.player.inactive .digit:first-child {
+  border-bottom: 2px solid transparent;
+  width: 0;
+}
+.player.inactive .score {
+  height: 80px;
+}
+.player.inactive .stake {
+  height: 0px;
+}
+
+.player.hurting {
+  animation: player-hurting 0.2s ease-out 8 normal forwards;
+}
+
+.playerAddContainer {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+  width: 300px;
+  transition-property: margin;
+  transition-duration: 1s;
+  transition-timing-function: ease-out;
+}
+.playerAddContainer.hidden {
+  margin-right: -300px;
+}
+.playerAddContainer .playerAddImage {
+  background: white;
+  padding: 20px 5px;
+  filter: invert(100%);
+  border-radius: 10px;
+  height: 150px;
+}
+
+.dashedBorderContainer {
+  background-color: black;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  border: dashed 3px white;
+  border-radius: 43px;
+  padding: 10px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  border-radius: 30px;
+  overflow: hidden;
+  padding: 2px;
+  align-items: center;
+}
+.buttonContainer button {
+  min-width: 100%;
+  max-width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  border: none;
+  border-radius: 30px;
+  padding: 2px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.buttonContainer button:disabled {
+  opacity: 0.5;
+}
+.buttonContainer button > .buttonContent {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  width: -moz-min-content;
+  width: min-content;
+  min-width: 100%;
+  max-width: 100%;
+  font-size: 2.5rem;
+  border: 2px solid transparent;
+  border-radius: 28px;
+  transition-property: border;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-out;
+  text-align: center;
+}
+.buttonContainer button > .buttonContent > img {
+  width: 100%;
+}
+.buttonContainer button > .buttonContent > p {
+  margin-block: -10px;
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 100%;
+}
+.buttonContainer button:last-child {
+  margin-bottom: 0;
+}
+.buttonContainer button:not(:disabled):hover > .buttonContent {
+  border: 2px solid black;
+}
+
+.diceContainerAligner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column: 2/3;
+  grid-row: 1/3;
+}
+
+.diceContainer {
+  z-index: 1;
+  display: flex;
+  background-color: black;
+  padding: 20px;
+  border-radius: 60px;
+  width: -moz-min-content;
+  width: min-content;
+}
+.diceContainer .buttonRollDie {
+  width: -moz-min-content;
+  width: min-content;
+}
+.diceContainer img {
+  width: auto !important;
+  background-color: white;
+  filter: invert(100%);
+  margin: -35px;
+  aspect-ratio: 1/1;
+  border-radius: 4.2%;
+}
+
+@keyframes reveal-digit-right {
+  0% {
+    margin-right: -65px;
+    width: 65px;
+  }
+  100% {
+    margin-right: 0;
+    width: 65px;
+  }
+}
+@keyframes reveal-digit-left {
+  0% {
+    margin-left: -65px;
+    width: 65px;
+  }
+  100% {
+    margin-left: 0;
+    width: 65px;
+  }
+}
+@keyframes player-hurting {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: #888;
+  }
+  100% {
+    background-color: white;
+  }
+}
+@media screen and (max-width: 1080px) {
+  body {
+    font-size: 1em;
+  }
+}/*# sourceMappingURL=style.css.map */
