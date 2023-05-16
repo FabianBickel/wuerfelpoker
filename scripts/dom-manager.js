@@ -93,8 +93,8 @@ function onPlayerAdded(player) {
   const id = player.id;
   console.log(id);
   const name = (player.isBot)
-  ? `Bot ${oldPlayerCount + 1}`
-  : `Player ${oldPlayerCount + 1}`;
+    ? `Bot ${oldPlayerCount + 1}`
+    : `Player ${oldPlayerCount + 1}`;
   addPlayerEventHandlers();
   addPlayerToDom();
   adjustDomToPlayerCount();
@@ -262,12 +262,12 @@ function disablePlayerAddButtons() {
   });
 }
 
-function lowerLimitReached() {
+function onLowerLimitReached() {
   console.log('Lower limit reached');
   enablePlayingButtons();
 }
 
-function lowerLimitUnreached() {
+function onLowerLimitUnreached() {
   console.log('Lower limit UNreached');
   disablePlayingButtons();
 }
@@ -301,8 +301,8 @@ function newGame() {
   gameManager.onPlayerAdded = onPlayerAdded;
   gameManager.onGameStarted = onGameStarted;
   gameManager.onGameEnded = onGameEnded;
-  gameManager.onLowerLimitReached = lowerLimitReached;
-  gameManager.lowerLimitUnreached = lowerLimitUnreached;
+  gameManager.onLowerLimitReached = onLowerLimitReached;
+  gameManager.onLowerLimitUnreached = onLowerLimitUnreached;
   addClickEventListenerToAllOfClass('buttonAddPlayer', () => gameManager.addPlayer(false));
   addClickEventListenerToAllOfClass('buttonAddBot', () => gameManager.addPlayer(true));
   addClickEventListenerToAllOfClass('buttonRollDice', () => gameManager.rollDice());

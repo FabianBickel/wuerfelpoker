@@ -5,25 +5,28 @@ import Bot from './bot.js';
 
 export default class GameManager {
   constructor() {
+    console.log(`Original GameManager is ${this.activePlayer}`);
     this.players = [];
+    this.activePlayer = undefined;
     this.gameStarted = false;
     this.gameEnded = false;
+    this.isLowerLimitReached = false;
     this.onDiceRolled = () => { };
     this.onPlayerAdded = (player) => { };
     this.onGameStarted = () => { };
     this.onGameEnded = (player) => { };
-    this.isLowerLimitReached = false;
     this.onLowerLimitReached = () => { };
-    this.lowerLimitUnreached = () => { };
+    this.onLowerLimitUnreached = () => { };
   }
 
   addPlayer(isBot) {
     const oldPlayerCount = this.players.length;
     const id = `player${oldPlayerCount + 1}`;
     const player = (isBot)
-      ? new Bot(id)
-      : new Player(id);
+      ? new Bot(id, this.#onPlayerEndsTurn.bind(this))
+      : new Player(id, this.#onPlayerEndsTurn.bind(this));
 
+    player.onEndTurn = this.#onPlayerEndsTurn;
     this.players.push(player);
     this.onPlayerAdded(player);
 
@@ -41,54 +44,66 @@ export default class GameManager {
     }
   }
 
+  #onPlayerEndsTurn() {
+    this.#checkForWin();
+    this.#cyclePlayer();
+  }
+
+  #checkForWin() {
+    console.log(`Checking for winner as ${this.activePlayer.id}`);
+    if (this.activePlayer.score >= 100) {
+      this.gameEnded = true;
+      this.onGameEnded(this.activePlayer);
+    }
+  }
+
+  #cyclePlayer() {
+    // console.log(`Switching player as ${this.activePlayer.id}`);
+    if (this.gameEnded) return;
+
+    const oldIndex = this.players.findIndex(player => player === this.activePlayer);
+    const newIndex = (oldIndex + 1) % this.players.length;
+
+    this.#switchPlayerTo(newIndex);
+  }
+
+  #switchPlayerTo(newIndex) {
+    console.log(`Switching player to ${this.players[newIndex].id}`);
+
+    this.activePlayer = this.players[newIndex];
+    this.activePlayer.activate();
+
+    if (this.activePlayer.isBot) this.#cyclePlayer();
+  }
+
+  rollDice() {
+    if (this.onLowerLimitReached === false) return;
+    this.#startGameIfNotStarted();
+    if (this.#conditionsForActivePlayMet() === false) return;
+
+    const dice = this.activePlayer.rollDice();
+    // if (dice === 1) this.#cyclePlayer();
+
+    this.onDiceRolled(dice);
+  }
+
   #startGameIfNotStarted() {
     if (this.gameStarted === false) {
       this.gameStarted = true;
       this.onGameStarted();
-      this.activePlayer = this.players[0];
+      this.#switchPlayerTo(0);
     }
-  }
-
-  #switchPlayer() {
-    const oldIndex = this.players.findIndex(player => player === this.activePlayer);
-    console.log(oldIndex);
-    const newIndex = (oldIndex + 1) % this.players.length;
-    console.log(newIndex);
-    this.activePlayer = this.players[newIndex];
-    this.activePlayer.activate();
-  }
-
-  #checkForWin() {
-    if (this.activePlayer.score >= 100) {
-      this.onGameEnded(this.activePlayer);
-      this.gameEnded = true;
-    }
-  }
-
-  rollDice() {
-    if (this.gameEnded) return;
-    if (this.onLowerLimitReached === false) return;
-    this.#startGameIfNotStarted();
-
-    const dice = this.activePlayer.rollDice();
-    if (dice === 1) this.#switchPlayer();
-
-    this.onDiceRolled(dice);
-    if (this.activePlayer.isBot) this.activePlayer.makeHoldDecision(dice);
-
-    this.#checkForWin();
   }
 
   holdStake() {
-    if (this.gameEnded) return;
-    if (this.onLowerLimitReached === false) return;
-    if (this.activePlayer.isBot) return;
+    if (this.#conditionsForActivePlayMet() === false) return;
     if (this.activePlayer.stake <= 1) return;
-
     this.activePlayer.hold();
+  }
 
-    this.#checkForWin();
-    this.#switchPlayer();
+  #conditionsForActivePlayMet() {
+    if (this.gameStarted === false) return false;
+    if (this.gameEnded) return false;
+    if (this.activePlayer.isBot) return false;
   }
 }
-
